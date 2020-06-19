@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Enriqueta&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap");
+html, body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+html h1, body h1 {
+  text-align: center;
+  font-family: "Enriqueta", serif;
+  font-weight: normal;
+  margin: 0;
+  padding: 12.5px 0;
+}
+html > div, body > div {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  width: 60%;
+  height: 50%;
+}
+html > div canvas, body > div canvas {
+  flex-grow: 1;
+  background-color: #DEF2FF;
+  border-radius: 7.5px 0 0 7.5px;
+}
+html > div > div, body > div > div {
+  min-width: 6%;
+  margin-left: 12.5px;
+  font-family: "Roboto", sans-serif;
+  overflow-y: auto;
+}
+html > div > div div.side-alg, body > div > div div.side-alg {
+  padding: 5px;
+  transition: 0.05s ease;
+}
+html > div > div div.side-alg.selected, body > div > div div.side-alg.selected {
+  background-color: #e2e2e2;
+}
+html > div > div:not(.disabled) div.side-alg:hover, body > div > div:not(.disabled) div.side-alg:hover {
+  cursor: pointer;
+}
+html > div > div:not(.disabled) div.side-alg:not(.selected):hover, body > div > div:not(.disabled) div.side-alg:not(.selected):hover {
+  background-color: #f2f2f2;
+}
+html > div > div.disabled, body > div > div.disabled {
+  opacity: 0.5;
+}
+html > div > div::-webkit-scrollbar, body > div > div::-webkit-scrollbar {
+  width: 4px;
+}
+html > div > div::-webkit-scrollbar-track, body > div > div::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+html > div > div::-webkit-scrollbar-thumb, body > div > div::-webkit-scrollbar-thumb {
+  background-color: #f2f2f2;
+}
+html footer, body footer {
+  padding: 12.5px;
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+@media only screen and (max-width: 1400px) {
+  html > div, body > div {
+    width: 80% !important;
+  }
+}
+@media only screen and (max-width: 800px) {
+  html > div, body > div {
+    width: 85% !important;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+  html > div > div, body > div > div {
+    min-width: 100% !important;
+    margin-left: 0;
+    margin-top: 12.5px;
+    text-align: center;
+  }
+  html > div > div div.side-alg, body > div > div div.side-alg {
+    display: inline-block;
+  }
+}
