@@ -12,7 +12,7 @@ export class PriorityQueue<T1, T2> {
   }
 
   public pop (): Pair<T1, T2> {
-    return this.q.shift();
+    return this.q.pop();
   }
 
   public get length (): number {

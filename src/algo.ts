@@ -1,4 +1,4 @@
-import { Edge, Node } from './node';
+import { Edge, Node, nullEdge } from './node';
 import { Graph } from './graph';
 import { Pair, PriorityQueue } from './queue';
 
@@ -49,7 +49,7 @@ export async function dfs (g: Graph<number>, ready: ()=>void) {
 export async function bfs (g: Graph<number>, ready: ()=>void) {
   const from: Node<number> = g.nodes[0];
   const to: Node<number> = g.nodes.slice(-1)[0];
-  const q: Array<Pair<Node<number>, Edge<number>>> = [{ first: from, second: { from: null, to: null, cost: null, active: false, used: false } }];
+  const q: Array<Pair<Node<number>, Edge<number>>> = [{ first: from, second: nullEdge() }];
   let c: Pair<Node<number>, Edge<number>>;
   while (q.length > 0) {
     c = q.shift();
@@ -66,10 +66,15 @@ export async function bfs (g: Graph<number>, ready: ()=>void) {
     }
     c.first.prev = c.second;
     if (c.first === to) break;
-    c.first.edges.forEach(e => {
-      if (c.first.to(e).prev) return;
+    for (const e of c.first.edges) {
+      if (c.first.to(e).prev) continue;
+      e.consider = true;
+      c.first.to(e).consider = true;
       q.push({ first: c.first.to(e), second: e });
-    });
+      await sleep();
+      e.consider = false;
+      c.first.to(e).consider = false;
+    }
     if (c.second.from) {
       c.first.to(c.second).active = false;
       c.second.active = false;
@@ -87,7 +92,7 @@ export async function dijkstra (g: Graph<number>, ready: ()=>void) {
   const to: Node<number> = g.nodes.slice(-1)[0];
   const q: PriorityQueue<number, Pair<Node<number>, Edge<number>>> = new PriorityQueue();
   var c: Pair<number, Pair<Node<number>, Edge<number>>>;
-  q.push(0, { first: from, second: { from: null, to: null, cost: null, active: false, used: false } });
+  q.push(0, { first: from, second: nullEdge() });
   while (q.length > 0) {
     c = q.pop();
     if (c.second.second.from) {
@@ -103,10 +108,15 @@ export async function dijkstra (g: Graph<number>, ready: ()=>void) {
     }
     c.second.first.prev = c.second.second;
     if (c.second.first === to) break;
-    c.second.first.edges.forEach(e => {
-      if (c.second.first.to(e).prev) return;
-      q.push(c.first + e.cost, { first: c.second.first.to(e), second: e });
-    });
+    for (const e of c.second.first.edges) {
+      if (c.second.first.to(e).prev) continue;
+      e.consider = true;
+      c.second.first.to(e).consider = true;
+      q.push(c.first - e.cost, { first: c.second.first.to(e), second: e });
+      await sleep();
+      e.consider = false;
+      c.second.first.to(e).consider = false;
+    }
     if (c.second.second.from) {
       c.second.first.to(c.second.second).active = false;
       c.second.second.active = false;
@@ -119,7 +129,48 @@ export async function dijkstra (g: Graph<number>, ready: ()=>void) {
   ready();
 };
 
-export function aStar (g: Graph<number>, ready: ()=>void): void {
+export async function aStar (g: Graph<number>, ready: ()=>void) {
+  const from: Node<number> = g.nodes[0];
+  const to: Node<number> = g.nodes.slice(-1)[0];
+  const q: PriorityQueue<number, Pair<number, Pair<Node<number>, Edge<number>>>> = new PriorityQueue();
+  var c: Pair<number, Pair<number, Pair<Node<number>, Edge<number>>>>;
+  q.push(0, { first: 0, second: { first: from, second: nullEdge() } });
+  while (q.length > 0) {
+    c = q.pop();
+    if (c.second.second.second.from) {
+      c.second.second.first.to(c.second.second.second).active = true;
+      c.second.second.second.active = true;
+      c.second.second.first.traceActive(c.second.second.second, from);
+    }
+    await sleep();
+    if (c.second.second.first.prev) {
+      c.second.second.second.active = false;
+      c.second.second.first.untraceActive(c.second.second.second, from);
+      continue;
+    }
+    c.second.second.first.prev = c.second.second.second;
+    if (c.second.second.first === to) break;
+    for (const e of c.second.second.first.edges) {
+      if (c.second.second.first.to(e).prev) continue;
+      const t: Node<number> = c.second.second.first.to(e);
+      e.consider = true;
+      t.consider = true;
+      const g: number = c.first + c.second.first - e.cost;
+      const h: number = Math.sqrt(Math.pow(t.x - to.x, 2) + Math.pow(t.y - to.y, 2));
+      q.push(g - h, { first: h, second: { first: t, second: e } });
+      await sleep();
+      e.consider = false;
+      t.consider = false;
+    }
+    if (c.second.second.second.from) {
+      c.second.second.first.to(c.second.second.second).active = false;
+      c.second.second.second.active = false;
+      c.second.second.first.untraceActive(c.second.second.second, from);
+    }
+  }
+  if (c.second.second.first === to) {
+    c.second.second.first.traceUsed(c.second.second.second, from);
+  }
   ready();
 };
 

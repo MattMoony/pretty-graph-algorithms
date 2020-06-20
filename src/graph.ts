@@ -1,4 +1,4 @@
-import { Node, Edge } from './node';
+import { Node, Edge, nullEdge, genEdge } from './node';
 import { Canvas } from './canvas';
 
 export class Graph<T> {
@@ -9,7 +9,7 @@ export class Graph<T> {
   }
 
   public addEdge (f: number, t: number, c: T): void {
-    const e: Edge<T> = { from: this.nodes[f], to: this.nodes[t], cost: c, active: false, used: false };
+    const e: Edge<T> = genEdge(this.nodes[f], this.nodes[t], c);
     this.nodes[f].addEdge(e);
     this.nodes[t].addEdge(e);
   }
@@ -18,6 +18,7 @@ export class Graph<T> {
     this.nodes.forEach(n => {
       n.active = false;
       n.used = false;
+      n.consider = false;
       n.prev = null;
       n.edges.forEach(e => {
         e.active = false;
