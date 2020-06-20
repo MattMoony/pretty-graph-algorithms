@@ -1,3 +1,5 @@
+<img align="right" src="media/graphs.png" width="125" height="125" />
+
 # Pretty Graph Algorithms
 _Graph go brrrr_
 
