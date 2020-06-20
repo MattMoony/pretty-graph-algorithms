@@ -6,6 +6,15 @@ export interface Edge<T> {
   cost: T;
   active: boolean;
   used: boolean;
+  consider: boolean;
+}
+
+export function genEdge<T> (from: Node<T>, to: Node<T>, cost: T): Edge<T> {
+  return { from: from, to: to, cost: cost, active: false, used: false, consider: false };
+}
+
+export function nullEdge<T> (): Edge<T> {
+  return genEdge(null, null, null);
 }
 
 const LETTERS: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -15,6 +24,7 @@ export class Node<T> {
   public y: number;
   public active: boolean;
   public used: boolean;
+  public consider: boolean;
   public prev: Edge<T>;
   public edges: Array<Edge<T>>;
 
@@ -34,7 +44,7 @@ export class Node<T> {
   }
 
   public addEdge (n: Node<T>|Edge<T>, c?: T): void {
-    if (c && n instanceof Node) this.edges.push({ from: this, to: n, cost: c, active: false, used: false });
+    if (c && n instanceof Node) this.edges.push({ from: this, to: n, cost: c, active: false, used: false, consider: false });
     else this.edges.push(<Edge<T>> n);
   }
 
@@ -78,9 +88,14 @@ export class Node<T> {
     this._trcActive(p, f, false);
   }
 
+  private _color (obj: Node<T>|Edge<T> = this, fill?: boolean): string {
+    if (fill) return obj.used ? 'rgba(255, 172, 118, .15)' : obj.active ? 'rgba(155, 90, 255, .15)' : obj.consider ? 'rgba(255, 105, 123, .15)' : undefined;
+    return obj.used ? '#FFAC76' : obj.active ? '#9B5AFF' : obj.consider ? '#FF697B' : undefined;
+  }
+
   public draw (ctx: Canvas): void {
-    ctx.circle(this.x, this.y, this.s, this.used ? '#FFAC76' : this.active ? '#9B5AFF' : undefined, this.used ? 'rgba(255, 172, 118, .15)' : this.active ? 'rgba(155, 90, 255, .15)' : undefined);
-    ctx.text(this.l, this.x, this.y, this.s, this.used ? '#FFAC76' : this.active ? '#9B5AFF' : undefined);
+    ctx.circle(this.x, this.y, this.s, this._color(), this._color(this, true));
+    ctx.text(this.l, this.x, this.y, this.s, this._color());
   }
 
   public drawEdges (ctx: Canvas, done: Array<Node<T>>): void {
@@ -94,8 +109,8 @@ export class Node<T> {
       const len: number = Math.sqrt(vx * vx + vy * vy);
       vx = vx / len;
       vy = vy / len;
-      ctx.line(this.x, this.y, to.x, to.y, e.used ? '#FFAC76' : e.active ? '#9B5AFF' : undefined, e.used ? 1.2 : e.active ? 0.8 : undefined);
-      ctx.text('' + e.cost, mx + vx * this.s * 0.5, my + vy * this.s * 0.5, this.s, e.used ? '#FFAC76' : e.active ? '#9B5AFF' : undefined);
+      ctx.line(this.x, this.y, to.x, to.y, this._color(e), e.used ? 1.2 : e.active ? 0.8 : e.consider ? 0.6 : undefined);
+      ctx.text('' + e.cost, mx + vx * this.s * 0.5, my + vy * this.s * 0.5, this.s, this._color(e));
     });
   }
 
