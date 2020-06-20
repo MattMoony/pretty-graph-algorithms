@@ -5,21 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pretty-Graph-Algorithms</title>
     <link type="text/css" rel="stylesheet" href="style/index.css" />
+    <script src="https://kit.fontawesome.com/eeafe44cad.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <h1>Pretty Graph Algorithms</h1>
     <div>
-        <canvas id="main"></canvas>
-        <div id="sidebar">
-            <div class="side-alg" alg="dfs">DFS</div>
-            <div class="side-alg" alg="bfs">BFS</div>
-            <div class="side-alg" alg="dijkstra">Dijkstra</div>
-            <div class="side-alg" alg="aStar">A*</div>
-            <div class="side-alg" alg="prims">Prim's</div>
-            <div class="side-alg" alg="kruskals">Kruskal's</div>
+        <div>
+            <canvas id="main"></canvas>
+            <div id="sidebar">
+                <div class="side-alg" alg="dfs">DFS</div>
+                <div class="side-alg" alg="bfs">BFS</div>
+                <div class="side-alg" alg="dijkstra">Dijkstra's</div>
+                <div class="side-alg" alg="aStar">A*</div>
+                <div class="side-alg" alg="prims">Prim's</div>
+                <div class="side-alg" alg="kruskals">Kruskal's</div>
+            </div>
+        </div>
+        <div>
+            <label>Playback timeout: </label>
+            <input id="rangein" type="range" min="10" max="2000" />
+            <label id="timeout">{}</label>
         </div>
     </div>
-    <footer>(c) 2020 Matthias Monschein</footer>
+    <footer>Copyright &copy; 2020 Matthias Monschein</footer>
     <script src="dist/bundle.js"></script>
 </body>
 </html>

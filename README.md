@@ -11,6 +11,28 @@ A small project to give nice visual representations of several popular/efficient
 
 You should be able to find a live-demo [here](https://mattmoony.github.io/pretty-graph-algorithms).
 
+## Roadmap
+
+* [x] Controls
+  * [x] Algorithm Selection
+  * [x] Speed control
+* [ ] Algorithms
+  * [x] Depth-First-Search
+  * [x] Breadth-First-Search
+  * [x] Dijkstra's Algorithm
+  * [ ] A* Algorithm
+  * [ ] Prim's Algorithm
+  * [ ] Kruskal's Algorithm
+* [x] Core
+  * [x] Classes
+    * [x] Graph
+    * [x] Node
+    * [x] Canvas
+    * [x] PriorityQueue
+  * [x] Interfaces
+    * [x] Edge
+    * [x] Pair
+
 ---
 
 ... Matthias M. (June 2020)

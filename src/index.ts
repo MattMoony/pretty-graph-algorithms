@@ -1,4 +1,4 @@
-import algo from './algo';
+import algo, { setPause } from './algo';
 import { Node } from './node';
 import { Graph } from './graph';
 import { Canvas } from './canvas';
@@ -6,6 +6,8 @@ import { Canvas } from './canvas';
 window.onload = () => {
   const sd: HTMLDivElement = <HTMLDivElement> document.getElementById('sidebar');
   const can: Canvas = new Canvas(<HTMLCanvasElement> document.getElementById('main'));
+  const rng: HTMLInputElement = <HTMLInputElement> document.getElementById('rangein');
+  const lbo: HTMLLabelElement = <HTMLLabelElement> document.getElementById('timeout');
   const g: Graph<number> = new Graph([
     new Node<number>(10, 15), 
     new Node<number>(15, 80),
@@ -38,6 +40,15 @@ window.onload = () => {
     g.draw(can);
   };
   window.onresize(null);
+
+  rng.oninput = () => {
+    setPause(+rng.value);
+    lbo.innerHTML = rng.value + 'ms';
+  };
+
+  setPause(300);
+  rng.value = '300';
+  lbo.innerHTML = '300ms';
 
   const opts: Array<HTMLDivElement> = Array.prototype.slice.call(document.getElementsByClassName('side-alg'));
   opts.forEach((b: HTMLDivElement) => {
