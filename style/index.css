@@ -10,6 +10,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: "Roboto", sans-serif;
 }
 html h1, body h1 {
   text-align: center;
@@ -20,46 +21,65 @@ html h1, body h1 {
 }
 html > div, body > div {
   display: flex;
+  flex-direction: column;
   justify-content: stretch;
   align-items: stretch;
   width: 60%;
   height: 50%;
 }
-html > div canvas, body > div canvas {
+html > div > div:first-child, body > div > div:first-child {
+  flex-grow: 1;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+}
+html > div > div:first-child canvas, body > div > div:first-child canvas {
   flex-grow: 1;
   background-color: #DEF2FF;
   border-radius: 7.5px 0 0 7.5px;
 }
-html > div > div, body > div > div {
+html > div > div:first-child > div, body > div > div:first-child > div {
   min-width: 6%;
   margin-left: 12.5px;
   font-family: "Roboto", sans-serif;
   overflow-y: auto;
 }
-html > div > div div.side-alg, body > div > div div.side-alg {
+html > div > div:first-child > div div.side-alg, body > div > div:first-child > div div.side-alg {
   padding: 5px;
   transition: 0.05s ease;
 }
-html > div > div div.side-alg.selected, body > div > div div.side-alg.selected {
+html > div > div:first-child > div div.side-alg.selected, body > div > div:first-child > div div.side-alg.selected {
   background-color: #e2e2e2;
 }
-html > div > div:not(.disabled) div.side-alg:hover, body > div > div:not(.disabled) div.side-alg:hover {
+html > div > div:first-child > div:not(.disabled) div.side-alg:hover, body > div > div:first-child > div:not(.disabled) div.side-alg:hover {
   cursor: pointer;
 }
-html > div > div:not(.disabled) div.side-alg:not(.selected):hover, body > div > div:not(.disabled) div.side-alg:not(.selected):hover {
+html > div > div:first-child > div:not(.disabled) div.side-alg:not(.selected):hover, body > div > div:first-child > div:not(.disabled) div.side-alg:not(.selected):hover {
   background-color: #f2f2f2;
 }
-html > div > div.disabled, body > div > div.disabled {
+html > div > div:first-child > div.disabled, body > div > div:first-child > div.disabled {
   opacity: 0.5;
 }
-html > div > div::-webkit-scrollbar, body > div > div::-webkit-scrollbar {
+html > div > div:first-child > div::-webkit-scrollbar, body > div > div:first-child > div::-webkit-scrollbar {
   width: 4px;
 }
-html > div > div::-webkit-scrollbar-track, body > div > div::-webkit-scrollbar-track {
+html > div > div:first-child > div::-webkit-scrollbar-track, body > div > div:first-child > div::-webkit-scrollbar-track {
   background-color: rgba(255, 255, 255, 0.2);
 }
-html > div > div::-webkit-scrollbar-thumb, body > div > div::-webkit-scrollbar-thumb {
+html > div > div:first-child > div::-webkit-scrollbar-thumb, body > div > div:first-child > div::-webkit-scrollbar-thumb {
   background-color: #f2f2f2;
+}
+html > div > div:last-child, body > div > div:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7.5px 0;
+}
+html > div > div:last-child label, body > div > div:last-child label {
+  font-size: 12.5px;
+}
+html > div > div:last-child input[type=range], body > div > div:last-child input[type=range] {
+  width: 50%;
 }
 html footer, body footer {
   padding: 12.5px;
@@ -77,17 +97,19 @@ html footer, body footer {
 @media only screen and (max-width: 800px) {
   html > div, body > div {
     width: 85% !important;
+  }
+  html > div > div, body > div > div {
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
   }
-  html > div > div, body > div > div {
+  html > div > div > div, body > div > div > div {
     min-width: 100% !important;
     margin-left: 0;
     margin-top: 12.5px;
     text-align: center;
   }
-  html > div > div div.side-alg, body > div > div div.side-alg {
+  html > div > div > div div.side-alg, body > div > div > div div.side-alg {
     display: inline-block;
   }
 }
