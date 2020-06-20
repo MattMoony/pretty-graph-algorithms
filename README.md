@@ -23,7 +23,7 @@ You should be able to find a live-demo [here](https://mattmoony.github.io/pretty
   * [x] Breadth-First-Search
   * [x] Dijkstra's Algorithm
   * [x] A* Algorithm
-  * [ ] Prim's Algorithm
+  * [x] Prim's Algorithm
   * [ ] Kruskal's Algorithm
 * [x] Core
   * [x] Classes
