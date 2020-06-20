@@ -42,6 +42,42 @@ export class Node<T> {
     return e.to !== this ? e.to : e.from;
   }
 
+  private _trcUsed (p: Edge<T>, f: Node<T>, b: boolean): void {
+    let c: Node<T> = this;
+    while (c !== f) {
+      c.used = b;
+      p.used = b;
+      [c, p] = [c.to(p), c.to(p).prev];
+    }
+    c.used = b;
+  }
+
+  public traceUsed (p: Edge<T>, f: Node<T>): void {
+    this._trcUsed(p, f, true);
+  }
+
+  public untraceUsed (p: Edge<T>, f: Node<T>): void {
+    this._trcUsed(p, f, false);
+  }
+
+  private _trcActive (p: Edge<T>, f: Node<T>, b: boolean): void {
+    let c: Node<T> = this;
+    while (c !== f) {
+      c.active = b;
+      p.active = b;
+      [c, p] = [c.to(p), c.to(p).prev];
+    }
+    c.active = b;
+  }
+
+  public traceActive (p: Edge<T>, f: Node<T>): void {
+    this._trcActive(p, f, true);
+  }
+
+  public untraceActive (p: Edge<T>, f: Node<T>): void {
+    this._trcActive(p, f, false);
+  }
+
   public draw (ctx: Canvas): void {
     ctx.circle(this.x, this.y, this.s, this.used ? '#FFAC76' : this.active ? '#9B5AFF' : undefined, this.used ? 'rgba(255, 172, 118, .15)' : this.active ? 'rgba(155, 90, 255, .15)' : undefined);
     ctx.text(this.l, this.x, this.y, this.s, this.used ? '#FFAC76' : this.active ? '#9B5AFF' : undefined);
@@ -61,5 +97,9 @@ export class Node<T> {
       ctx.line(this.x, this.y, to.x, to.y, e.used ? '#FFAC76' : e.active ? '#9B5AFF' : undefined, e.used ? 1.2 : e.active ? 0.8 : undefined);
       ctx.text('' + e.cost, mx + vx * this.s * 0.5, my + vy * this.s * 0.5, this.s, e.used ? '#FFAC76' : e.active ? '#9B5AFF' : undefined);
     });
+  }
+
+  public toString (): string {
+    return this.l;
   }
 };

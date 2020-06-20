@@ -11,6 +11,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: 'Roboto', sans-serif;
 
     h1 {
         text-align: center;
@@ -22,58 +23,81 @@ html, body {
 
     & > div {
         display: flex;
+        flex-direction: column;
         justify-content: stretch;
         align-items: stretch;
         width: 60%;
         height: 50%;
 
-        canvas {
+        & > div:first-child {
             flex-grow: 1;
-            background-color: #DEF2FF;
-            border-radius: 7.5px 0 0 7.5px;
+            display: flex;
+            justify-content: stretch;
+            align-items: stretch;
+
+            canvas {
+                flex-grow: 1;
+                background-color: #DEF2FF;
+                border-radius: 7.5px 0 0 7.5px;
+            }
+
+            & > div {
+                min-width: 6%;
+                margin-left: 12.5px;
+                font-family: 'Roboto', sans-serif;
+                overflow-y: auto;
+
+                div.side-alg {
+                    padding: 5px;
+                    transition: .05s ease;
+
+                    &.selected {
+                        background-color: #e2e2e2;
+                    }
+                }
+
+                &:not(.disabled) {
+                    div.side-alg {
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    
+                        &:not(.selected):hover {
+                            background-color: #f2f2f2;
+                        }
+                    }
+                }
+
+                &.disabled {
+                    opacity: .5;
+                }
+
+                &::-webkit-scrollbar {
+                    width: 4px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background-color: rgba(255, 255, 255, .2);
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: #f2f2f2;
+                }
+            }
         }
 
-        & > div {
-            min-width: 6%;
-            margin-left: 12.5px;
-            font-family: 'Roboto', sans-serif;
-            overflow-y: auto;
+        & > div:last-child {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 7.5px 0;
 
-            div.side-alg {
-                padding: 5px;
-                transition: .05s ease;
-
-                &.selected {
-                    background-color: #e2e2e2;
-                }
+            label {
+                font-size: 12.5px;
             }
 
-            &:not(.disabled) {
-                div.side-alg {
-                    &:hover {
-                        cursor: pointer;
-                    }
-    
-                    &:not(.selected):hover {
-                        background-color: #f2f2f2;
-                    }
-                }
-            }
-
-            &.disabled {
-                opacity: .5;
-            }
-
-            &::-webkit-scrollbar {
-                width: 4px;
-            }
-
-            &::-webkit-scrollbar-track {
-                background-color: rgba(255, 255, 255, .2);
-            }
-
-            &::-webkit-scrollbar-thumb {
-                background-color: #f2f2f2;
+            input[type="range"] {
+                width: 50%;
             }
         }
     }
@@ -99,18 +123,21 @@ html, body {
     html, body {
         & > div {
             width: 85% !important;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: stretch;
-
+            
             & > div {
-                min-width: 100% !important;
-                margin-left: 0;
-                margin-top: 12.5px;
-                text-align: center;
-
-                div.side-alg {
-                    display: inline-block;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: stretch;
+    
+                & > div {
+                    min-width: 100% !important;
+                    margin-left: 0;
+                    margin-top: 12.5px;
+                    text-align: center;
+    
+                    div.side-alg {
+                        display: inline-block;
+                    }
                 }
             }
         }
