@@ -93,7 +93,7 @@ export async function dijkstra (g: Graph<number>, ready: ()=>void) {
   const q: PriorityQueue<number, Pair<Node<number>, Edge<number>>> = new PriorityQueue();
   var c: Pair<number, Pair<Node<number>, Edge<number>>>;
   q.push(0, { first: from, second: nullEdge() });
-  while (q.length > 0) {
+  while (!q.empty()) {
     c = q.pop();
     if (c.second.second.from) {
       c.second.first.to(c.second.second).active = true;
@@ -135,7 +135,7 @@ export async function aStar (g: Graph<number>, ready: ()=>void) {
   const q: PriorityQueue<number, Pair<number, Pair<Node<number>, Edge<number>>>> = new PriorityQueue();
   var c: Pair<number, Pair<number, Pair<Node<number>, Edge<number>>>>;
   q.push(0, { first: 0, second: { first: from, second: nullEdge() } });
-  while (q.length > 0) {
+  while (!q.empty()) {
     c = q.pop();
     if (c.second.second.second.from) {
       c.second.second.first.to(c.second.second.second).active = true;
@@ -174,7 +174,42 @@ export async function aStar (g: Graph<number>, ready: ()=>void) {
   ready();
 };
 
-export function prims (g: Graph<number>, ready: ()=>void): void {
+export async function prims (g: Graph<number>, ready: ()=>void) {
+  const mst: Array<Edge<number>> = [];
+  const q: PriorityQueue<number, Pair<Node<number>, Edge<number>>> = new PriorityQueue();
+  q.push(0, { first: g.nodes[0], second: nullEdge() });
+  var c: Pair<number, Pair<Node<number>, Edge<number>>>;
+  while (!q.empty()) {
+    c = q.pop();
+    if (c.second.second.from) {
+      c.second.second.active = true;
+    }
+    await sleep();
+    if (c.second.first.active) {
+      c.second.second.active = false;
+      continue;
+    }
+    c.second.first.active = true;
+    if (c.second.second.from) mst.push(c.second.second);
+    if (mst.length === g.nodes.length - 1) break;
+    for (const e of c.second.first.edges) {
+      if (c.second.first.to(e).active) continue;
+      e.consider = true;
+      c.second.first.to(e).consider = true;
+      q.push(-e.cost, { first: c.second.first.to(e), second: e });
+      await sleep();
+      e.consider = false;
+      c.second.first.to(e).consider = false;
+    }
+  }
+  for (const e of mst) {
+    e.from.used = true;
+    e.to.used = true;
+    e.used = true;
+  }
+  if (mst.length < g.nodes.length - 1) {
+    g.reset();
+  }
   ready();
 };
 

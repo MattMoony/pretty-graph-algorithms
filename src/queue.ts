@@ -15,6 +15,10 @@ export class PriorityQueue<T1, T2> {
     return this.q.pop();
   }
 
+  public empty (): boolean {
+    return this.length === 0;
+  }
+
   public get length (): number {
     return this.q.length;
   }
