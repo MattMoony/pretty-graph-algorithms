@@ -58,7 +58,7 @@ export class Node<T> {
       const len: number = Math.sqrt(vx * vx + vy * vy);
       vx = vx / len;
       vy = vy / len;
-      ctx.line(this.x, this.y, to.x, to.y, e.used ? '#FFAC76' : e.active ? '#9B5AFF' : undefined, e.used ? 4 : e.active ? 3 : undefined);
+      ctx.line(this.x, this.y, to.x, to.y, e.used ? '#FFAC76' : e.active ? '#9B5AFF' : undefined, e.used ? 1.2 : e.active ? 0.8 : undefined);
       ctx.text('' + e.cost, mx + vx * this.s * 0.5, my + vy * this.s * 0.5, this.s, e.used ? '#FFAC76' : e.active ? '#9B5AFF' : undefined);
     });
   }

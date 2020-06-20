@@ -68,6 +68,7 @@ export class Canvas {
     this.ctx.fill();
     this.ctx.beginPath();
     this.ctx.strokeStyle = c;
+    this.ctx.lineWidth = 0.4;
     this.ctx.fillStyle = cb;
     this.ctx.ellipse(this.cvx(cx), this.cvy(cy), this.cv(sz), this.cv(sz), 0, 0, Math.PI * 2);
     this.ctx.closePath();
@@ -83,9 +84,10 @@ export class Canvas {
     this.ctx.fillText(txt, this.cvx(cx), this.cvy(cy));
   }
 
-  public line (fx: number, fy: number, tx: number, ty: number, c: string = '#555', w: number = 1): void {
+  public line (fx: number, fy: number, tx: number, ty: number, c: string = '#555', w: number = 0.4): void {
     this.ctx.beginPath();
     this.ctx.strokeStyle = c;
+    this.ctx.lineWidth = this.cv(w);
     this.ctx.moveTo(this.cvx(fx), this.cvy(fy));
     this.ctx.lineTo(this.cvx(tx), this.cvy(ty));
     this.ctx.closePath();
