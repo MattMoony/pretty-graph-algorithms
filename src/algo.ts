@@ -1,6 +1,6 @@
-import { Edge, Node, nullEdge } from './node';
+import { Edge, Node } from './node';
 import { Graph } from './graph';
-import { Pair, PriorityQueue } from './queue';
+import { Pair, PriorityQueue, UnionFind } from './utils';
 
 var TIMEOUT: number = 300;
 
@@ -24,8 +24,12 @@ async function _dfs (c: Node<number>, t: Node<number>, p: Array<Node<number>>) {
   for (const e of c.edges) {
     if (e.active) continue;
     const to: Node<number> = c.to(e);
-    e.active = true;
+    e.consider = true;
+    to.consider = true;
     await sleep();
+    e.consider = false;
+    to.consider = false;
+    e.active = true;
     await _dfs(to, t, p);
     if (p.slice(-1)[0] === t) {
       e.used = true;
@@ -49,7 +53,7 @@ export async function dfs (g: Graph<number>, ready: ()=>void) {
 export async function bfs (g: Graph<number>, ready: ()=>void) {
   const from: Node<number> = g.nodes[0];
   const to: Node<number> = g.nodes.slice(-1)[0];
-  const q: Array<Pair<Node<number>, Edge<number>>> = [{ first: from, second: nullEdge() }];
+  const q: Array<Pair<Node<number>, Edge<number>>> = [{ first: from, second: new Edge() }];
   let c: Pair<Node<number>, Edge<number>>;
   while (q.length > 0) {
     c = q.shift();
@@ -92,7 +96,7 @@ export async function dijkstra (g: Graph<number>, ready: ()=>void) {
   const to: Node<number> = g.nodes.slice(-1)[0];
   const q: PriorityQueue<number, Pair<Node<number>, Edge<number>>> = new PriorityQueue();
   var c: Pair<number, Pair<Node<number>, Edge<number>>>;
-  q.push(0, { first: from, second: nullEdge() });
+  q.push(0, { first: from, second: new Edge() });
   while (!q.empty()) {
     c = q.pop();
     if (c.second.second.from) {
@@ -134,7 +138,7 @@ export async function aStar (g: Graph<number>, ready: ()=>void) {
   const to: Node<number> = g.nodes.slice(-1)[0];
   const q: PriorityQueue<number, Pair<number, Pair<Node<number>, Edge<number>>>> = new PriorityQueue();
   var c: Pair<number, Pair<number, Pair<Node<number>, Edge<number>>>>;
-  q.push(0, { first: 0, second: { first: from, second: nullEdge() } });
+  q.push(0, { first: 0, second: { first: from, second: new Edge() } });
   while (!q.empty()) {
     c = q.pop();
     if (c.second.second.second.from) {
@@ -177,7 +181,7 @@ export async function aStar (g: Graph<number>, ready: ()=>void) {
 export async function prims (g: Graph<number>, ready: ()=>void) {
   const mst: Array<Edge<number>> = [];
   const q: PriorityQueue<number, Pair<Node<number>, Edge<number>>> = new PriorityQueue();
-  q.push(0, { first: g.nodes[0], second: nullEdge() });
+  q.push(0, { first: g.nodes[0], second: new Edge() });
   var c: Pair<number, Pair<Node<number>, Edge<number>>>;
   while (!q.empty()) {
     c = q.pop();
@@ -207,13 +211,39 @@ export async function prims (g: Graph<number>, ready: ()=>void) {
     e.to.used = true;
     e.used = true;
   }
-  if (mst.length < g.nodes.length - 1) {
-    g.reset();
-  }
+  if (mst.length < g.nodes.length - 1) g.reset();
   ready();
 };
 
-export function kruskals (g: Graph<number>, ready: ()=>void): void {
+export async function kruskals (g: Graph<number>, ready: ()=>void) {
+  const mst: Array<Edge<number>> = [];
+  const edges: Array<Edge<number>> = [...new Set(g.nodes.map(n => n.edges).flat())];
+  edges.sort((a: Edge<number>, b: Edge<number>) => a.cost - b.cost);
+  const krusk: UnionFind<string> = new UnionFind(g.nodes.map(n => n.id));
+  let c: Edge<number>;
+  while (edges.length > 0) {
+    c = edges.shift();
+    c.consider = true;
+    c.from.consider = true;
+    c.to.consider = true;
+    await sleep();
+    c.consider = false;
+    c.from.consider = false;
+    c.to.consider = false;  
+    if (krusk.find(c.from.id) === krusk.find(c.to.id)) continue;
+    krusk.union(c.from.id, c.to.id);
+    c.active = true;
+    c.from.active = true;
+    c.to.active = true;
+    mst.push(c);
+    if (mst.length === g.nodes.length - 1) break;
+  }
+  for (const e of mst) {
+    e.used = true;
+    e.from.used = true;
+    e.to.used = true;
+  }
+  if (mst.length < g.nodes.length - 1) g.reset();
   ready();
 };
 
