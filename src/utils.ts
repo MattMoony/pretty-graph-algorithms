@@ -43,9 +43,10 @@ export class UnionFind<T> {
   }
 
   public union (a: T, b: T): void {
+    a = this.find(a);
+    b = this.find(b);
     if (this.s.get(a) < this.s.get(b)) [a, b] = [b, a];
-    const root: T = this.find(a);
-    this.m.set(b, root);
-    this.s.set(root, this.s.get(root) + this.s.get(b));
+    this.m.set(b, a);
+    this.s.set(a, this.s.get(a) + this.s.get(b));
   }
 };
