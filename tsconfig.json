@@ -5,6 +5,10 @@
         "preserveConstEnums": true,
         "outDir": "dist",
         "target": "ES6",
+        "lib": [
+            "ES2019",
+            "DOM"
+        ],
         "moduleResolution": "node",
         "sourceMap": true
     },

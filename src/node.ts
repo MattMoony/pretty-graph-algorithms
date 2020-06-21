@@ -1,20 +1,25 @@
 import { Canvas } from './canvas';
 
-export interface Edge<T> {
-  from: Node<T>;
-  to: Node<T>;
-  cost: T;
-  active: boolean;
-  used: boolean;
-  consider: boolean;
-}
+export class Edge<T> {
+  public from: Node<T>;
+  public to: Node<T>;
+  public cost: T;
+  public active: boolean;
+  public used: boolean;
+  public consider: boolean;
 
-export function genEdge<T> (from: Node<T>, to: Node<T>, cost: T): Edge<T> {
-  return { from: from, to: to, cost: cost, active: false, used: false, consider: false };
-}
+  constructor (from: Node<T> = null, to: Node<T> = null, cost: T = null) {
+    this.from = from;
+    this.to = to;
+    this.cost = cost;
+    this.active = false;
+    this.used = false;
+    this.consider = false;
+  }
 
-export function nullEdge<T> (): Edge<T> {
-  return genEdge(null, null, null);
+  public toString (): string {
+    return this.from + ' -> ' + this.to;
+  }
 }
 
 const LETTERS: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -43,8 +48,12 @@ export class Node<T> {
     this.l = l || LETTERS[Node.lind++];
   }
 
+  public get id (): string {
+    return this.l;
+  }
+
   public addEdge (n: Node<T>|Edge<T>, c?: T): void {
-    if (c && n instanceof Node) this.edges.push({ from: this, to: n, cost: c, active: false, used: false, consider: false });
+    if (c && n instanceof Node) this.edges.push(new Edge(this, n, c));
     else this.edges.push(<Edge<T>> n);
   }
 
