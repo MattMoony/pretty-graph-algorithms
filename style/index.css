@@ -24,8 +24,8 @@ html > div, body > div {
   flex-direction: column;
   justify-content: stretch;
   align-items: stretch;
-  width: 60%;
-  height: 60%;
+  width: 65%;
+  height: 65%;
 }
 html > div > div:first-child, body > div > div:first-child {
   flex-grow: 1;
@@ -94,9 +94,11 @@ html footer, body footer {
     width: 80% !important;
   }
 }
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 900px) {
   html > div, body > div {
     width: 85% !important;
+    height: 50% !important;
+    min-height: 300px !important;
   }
   html > div > div, body > div > div {
     flex-direction: column;
