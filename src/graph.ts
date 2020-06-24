@@ -14,11 +14,16 @@ export class Graph<T> {
     this.nodes[t].addEdge(e);
   }
 
+  public get edges (): Array<Edge<T>> {
+    return [...new Set(this.nodes.map(n => n.edges).flat())];
+  }
+
   public reset (): void {
     this.nodes.forEach(n => {
       n.active = false;
       n.used = false;
       n.consider = false;
+      n.cost = Number.MAX_VALUE;
       n.prev = null;
       n.edges.forEach(e => {
         e.active = false;
