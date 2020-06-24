@@ -27,10 +27,12 @@ const LETTERS: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 export class Node<T> {
   public x: number;
   public y: number;
+
   public active: boolean;
   public used: boolean;
   public consider: boolean;
   public prev: Edge<T>;
+  public cost: number = Number.MAX_VALUE;
   public edges: Array<Edge<T>>;
 
   private s: number = 4;

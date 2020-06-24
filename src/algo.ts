@@ -178,6 +178,55 @@ export async function aStar (g: Graph<number>, ready: ()=>void) {
   ready();
 };
 
+export async function bellmanFord (g: Graph<number>, ready: ()=>void) {
+  const from: Node<number> = g.nodes[0];
+  const to: Node<number> = g.nodes.slice(-1)[0];
+  const edges: Array<Edge<number>> = g.edges;
+  let change: boolean = true;
+  from.cost = 0;
+  for (let i = 0; i < edges.length - 1 && change; i++) {
+    change = false;
+    for (const e of edges) {
+      e.consider = true;
+      e.from.consider = true;
+      e.to.consider = true;
+      await sleep();
+      if (e.from.cost + e.cost < e.to.cost) {
+        e.active = true;
+        e.to.active = true;
+        e.to.cost = e.from.cost + e.cost;
+        e.to.prev = e;
+        await sleep();
+        e.active = false;
+        e.to.active = false;
+        change = true;
+      } else if (e.to.cost + e.cost < e.from.cost) {
+        e.active = true;
+        e.from.active = true;
+        e.from.cost = e.to.cost + e.cost;
+        e.from.prev = e;
+        await sleep();
+        e.active = false;
+        e.from.active = false;
+        change = true;
+      }
+      e.consider = false;
+      e.from.consider = false;
+      e.to.consider = false;
+    }
+  }
+  if (to.prev) {
+    let c: Node<number> = to;
+    while (c !== from) {
+      c.used = true;
+      c.prev.used = true;
+      c = c.to(c.prev);
+    }
+    c.used = true;
+  }
+  ready();
+};
+
 export async function prims (g: Graph<number>, ready: ()=>void) {
   const mst: Array<Edge<number>> = [];
   const q: PriorityQueue<number, Pair<Node<number>, Edge<number>>> = new PriorityQueue();
@@ -252,6 +301,7 @@ const def: {[index: string]: (g: Graph<number>, ready: ()=>void)=>void} = {
   bfs: bfs,
   dijkstra: dijkstra,
   aStar: aStar,
+  bellmanFord: bellmanFord,
   prims: prims,
   kruskals: kruskals
 };
