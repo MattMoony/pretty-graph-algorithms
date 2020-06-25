@@ -24,11 +24,9 @@ async function _dfs (c: Node<number>, t: Node<number>, p: Array<Node<number>>) {
   for (const e of c.edges) {
     if (e.active) continue;
     const to: Node<number> = c.to(e);
-    e.consider = true;
-    to.consider = true;
+    e.setConsider(true);
     await sleep();
-    e.consider = false;
-    to.consider = false;
+    e.setConsider(false);
     e.active = true;
     await _dfs(to, t, p);
     if (p.slice(-1)[0] === t) {
@@ -187,32 +185,24 @@ export async function bellmanFord (g: Graph<number>, ready: ()=>void) {
   for (let i = 0; i < edges.length - 1 && change; i++) {
     change = false;
     for (const e of edges) {
-      e.consider = true;
-      e.from.consider = true;
-      e.to.consider = true;
+      e.setConsider(true);
       await sleep();
       if (e.from.cost + e.cost < e.to.cost) {
-        e.active = true;
-        e.to.active = true;
+        e.setActive(true);
         e.to.cost = e.from.cost + e.cost;
         e.to.prev = e;
         await sleep();
-        e.active = false;
-        e.to.active = false;
+        e.setActive(false);
         change = true;
       } else if (e.to.cost + e.cost < e.from.cost) {
-        e.active = true;
-        e.from.active = true;
+        e.setActive(true);
         e.from.cost = e.to.cost + e.cost;
         e.from.prev = e;
         await sleep();
-        e.active = false;
-        e.from.active = false;
+        e.setActive(false);
         change = true;
       }
-      e.consider = false;
-      e.from.consider = false;
-      e.to.consider = false;
+      e.setConsider(false);
     }
   }
   if (to.prev) {
@@ -333,26 +323,16 @@ export async function kruskals (g: Graph<number>, ready: ()=>void) {
   let c: Edge<number>;
   while (edges.length > 0) {
     c = edges.shift();
-    c.consider = true;
-    c.from.consider = true;
-    c.to.consider = true;
+    c.setConsider(true);
     await sleep();
-    c.consider = false;
-    c.from.consider = false;
-    c.to.consider = false;  
+    c.setConsider(false);
     if (krusk.find(c.from.id) === krusk.find(c.to.id)) continue;
     krusk.union(c.from.id, c.to.id);
-    c.active = true;
-    c.from.active = true;
-    c.to.active = true;
+    c.setActive(true);
     mst.push(c);
     if (mst.length === g.nodes.length - 1) break;
   }
-  for (const e of mst) {
-    e.used = true;
-    e.from.used = true;
-    e.to.used = true;
-  }
+  mst.forEach(e => e.setUsed(true));
   if (mst.length < g.nodes.length - 1) g.reset();
   ready();
 };
