@@ -17,6 +17,27 @@ export class Edge<T> {
     this.consider = false;
   }
 
+  public setActive (a: boolean = true): void {
+    if (this.from === null || this.to === null) return;
+    this.active = a;
+    this.from.active = a;
+    this.to.active = a;
+  }
+  
+  public setUsed (u: boolean = true): void {
+    if (this.from === null || this.to === null) return;
+    this.used = u;
+    this.from.used = u;
+    this.to.used = u;
+  }
+  
+  public setConsider (c: boolean = true): void {
+    if (this.from === null || this.to === null) return;
+    this.consider = c;
+    this.from.consider = c;
+    this.to.consider = c;
+  }
+
   public toString (): string {
     return this.from + ' -> ' + this.to;
   }
@@ -57,6 +78,11 @@ export class Node<T> {
   public addEdge (n: Node<T>|Edge<T>, c?: T): void {
     if (c && n instanceof Node) this.edges.push(new Edge(this, n, c));
     else this.edges.push(<Edge<T>> n);
+  }
+
+  public edgeTo (n: Node<T>): Edge<T> {
+    const r: Array<Edge<T>> = this.edges.filter(e => this.to(e) === n);
+    return r.length > 0 ? r[0] : new Edge();
   }
 
   public to (e: Edge<T>): Node<T> {

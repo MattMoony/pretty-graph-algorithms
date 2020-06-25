@@ -227,6 +227,67 @@ export async function bellmanFord (g: Graph<number>, ready: ()=>void) {
   ready();
 };
 
+export async function floydWarshall (g: Graph<number>, ready: ()=>void) {
+  const edges: Array<Edge<number>> = g.edges;
+  const d: Array<Array<[number, number, number]>> = new Array(g.nodes.length).fill(null).map((a, i) => new Array(g.nodes.length).fill(null).map((b, j) => [i === j ? 0 : Number.MAX_VALUE, -1, -1]));
+  const getPath: (f: number, t: number)=>Array<Edge<number>> = (f: number, t: number) => {
+    let p: Array<Edge<number>> = [];
+    let c: [number, number, number] = d[f][t];
+    while (c[1] !== t && c[1] !== -1) {
+      p.push(g.nodes[c[1]].edgeTo(g.nodes[c[2]]));
+      if (c[1] === c[2]) {
+        p.push(g.nodes[c[1]].edgeTo(g.nodes[d[c[1]][t][1]]));
+        c = d[c[1]][t];
+        continue;
+      }
+      c = d[c[1]][c[2]];
+    }
+    p = p.filter(e => e.from && e.to);
+    return p.length > 0 ? p : [g.nodes[f].edgeTo(g.nodes[t])];
+  };
+  for (const e of edges) {
+    const [u, v]: [number, number] = [g.nodes.indexOf(e.from), g.nodes.indexOf(e.to)];
+    e.setConsider(true);
+    await sleep();
+    if (e.cost < d[u][v][0] || e.cost < d[v][u][0]) {
+      e.setActive(true);
+      if (e.cost < d[u][v][0]) {
+        d[u][v] = [e.cost, v, v];
+      }
+      if (e.cost < d[v][u][0]) {
+        d[v][u] = [e.cost, u, u];
+      }
+      await sleep();
+      e.setActive(false);
+    }
+    e.setConsider(false);
+  }
+  for (let k = 0; k < g.nodes.length; k++) {
+    for (let i = 0; i < g.nodes.length; i++) {
+      for (let j = 0; j < g.nodes.length; j++) {
+        const calcd = d[i][k][0] + d[k][j][0];
+        const [ac, cb]: [Array<Edge<number>>, Array<Edge<number>>] = [getPath(i, k), getPath(k, j)];
+        ac.forEach(e => e.setConsider(true));
+        cb.forEach(e => e.setConsider(true));
+        await sleep();
+        if (calcd < d[i][j][0]) {
+          ac.forEach(e => e.setActive(true));
+          cb.forEach(e => e.setActive(true));
+          d[i][j] = [calcd, i, k];
+          await sleep();
+          ac.forEach(e => e.setActive(false));
+          cb.forEach(e => e.setActive(false));
+        }
+        ac.forEach(e => e.setConsider(false));
+        cb.forEach(e => e.setConsider(false));
+      }
+    }
+  }
+  getPath(0, g.nodes.length - 1).forEach(e => e.setUsed(true));
+  g.nodes.slice(-1)[0].used = true;
+  ready();
+};
+
 export async function prims (g: Graph<number>, ready: ()=>void) {
   const mst: Array<Edge<number>> = [];
   const q: PriorityQueue<number, Pair<Node<number>, Edge<number>>> = new PriorityQueue();
@@ -302,6 +363,7 @@ const def: {[index: string]: (g: Graph<number>, ready: ()=>void)=>void} = {
   dijkstra: dijkstra,
   aStar: aStar,
   bellmanFord: bellmanFord,
+  floydWarshall: floydWarshall,
   prims: prims,
   kruskals: kruskals
 };
