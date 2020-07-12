@@ -12,6 +12,60 @@ function sleep (ms: number = TIMEOUT): Promise<void> {
   return new Promise((resolve, reject) => window.setTimeout(resolve, ms));
 }
 
+export function buildGraph (g: Graph<number>): void {
+  g.nodes = [
+    new Node<number>(10, 15), 
+    new Node<number>(15, 80),
+    new Node<number>(35, 30),
+    new Node<number>(47, 70),
+    new Node<number>(56, 45),
+    new Node<number>(62, 20),
+    new Node<number>(75, 75),
+    new Node<number>(90, 50)
+  ];
+  g.addEdge(0, 2, 5);
+  g.addEdge(0, 1, 2);
+  g.addEdge(0, 5, 6);
+  g.addEdge(1, 4, 5);
+  g.addEdge(1, 2, 3);
+  g.addEdge(2, 3, 3);
+  g.addEdge(2, 7, 10);
+  g.addEdge(3, 6, 3);
+  g.addEdge(4, 5, 1);
+  g.addEdge(4, 6, 2);
+  g.addEdge(6, 7, 2);
+}
+
+export function buildTree (g: Graph<number>): void {
+  g.nodes = [
+    new Node<number>(50, 10),
+    new Node<number>(25, 25),
+    new Node<number>(70, 25),
+    new Node<number>(10, 40),
+    new Node<number>(40, 40),
+    new Node<number>(85, 40),
+    new Node<number>(32.5, 60),
+    new Node<number>(47.5, 60),
+    new Node<number>(77.5, 60),
+    new Node<number>(28.75, 80),
+    new Node<number>(36.25, 80),
+    new Node<number>(74.25, 80),
+    new Node<number>(80.75, 80),
+  ];
+  g.addEdge(0, 1, 1);
+  g.addEdge(0, 2, 1);
+  g.addEdge(1, 3, 1);
+  g.addEdge(1, 4, 1);
+  g.addEdge(2, 5, 1);
+  g.addEdge(4, 6, 1);
+  g.addEdge(4, 7, 1);
+  g.addEdge(5, 8, 1);
+  g.addEdge(6, 9, 1);
+  g.addEdge(6, 10, 1);
+  g.addEdge(8, 11, 1);
+  g.addEdge(8, 12, 1);
+}
+
 async function _dfs (c: Node<number>, t: Node<number>, p: Array<Node<number>>) {
   p.push(c);
   if (c.active) return;
@@ -337,15 +391,16 @@ export async function kruskals (g: Graph<number>, ready: ()=>void) {
   ready();
 };
 
+export async function lcaBinaryLifting (g: Graph<number>, ready: ()=>void) {
+  ready();
+}
+
+export async function lcaEulerTour (g: Graph<number>, ready: ()=>void) {
+  ready();
+}
+
 const def: {[index: string]: (g: Graph<number>, ready: ()=>void)=>void} = {
-  dfs: dfs,
-  bfs: bfs,
-  dijkstra: dijkstra,
-  aStar: aStar,
-  bellmanFord: bellmanFord,
-  floydWarshall: floydWarshall,
-  prims: prims,
-  kruskals: kruskals
+  dfs, bfs, dijkstra, aStar, bellmanFord, floydWarshall, prims, kruskals, lcaBinaryLifting, lcaEulerTour,
 };
 
 export default def;

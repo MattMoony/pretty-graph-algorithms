@@ -154,4 +154,8 @@ export class Node<T> {
   public toString (): string {
     return this.l;
   }
+
+  public static reset (): void {
+    Node.lind = 0;
+  }
 };
