@@ -45,8 +45,10 @@ html > div > div:first-child > div, body > div > div:first-child > div {
   overflow-y: auto;
 }
 html > div > div:first-child > div div.side-alg, body > div > div:first-child > div div.side-alg {
+  max-width: 100px;
   padding: 5px;
   transition: 0.05s ease;
+  vertical-align: middle;
 }
 html > div > div:first-child > div div.side-alg.selected, body > div > div:first-child > div div.side-alg.selected {
   background-color: #e2e2e2;
