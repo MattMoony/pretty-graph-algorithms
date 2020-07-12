@@ -48,8 +48,10 @@ html, body {
                 overflow-y: auto;
 
                 div.side-alg {
+                    max-width: 100px;
                     padding: 5px;
                     transition: .05s ease;
+                    vertical-align: middle;
 
                     &.selected {
                         background-color: #e2e2e2;

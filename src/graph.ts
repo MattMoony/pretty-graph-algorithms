@@ -33,6 +33,11 @@ export class Graph<T> {
     });
   }
 
+  public clear (): void {
+    Node.reset();
+    this.nodes = [];
+  }
+
   public draw (ctx: Canvas): void {
     ctx.clear();
     const done: Array<Node<T>> = [];
