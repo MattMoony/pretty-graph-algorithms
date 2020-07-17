@@ -15,26 +15,32 @@ You should be able to find a live-demo [here](https://mattmoony.github.io/pretty
 
 ## Roadmap
 
-* [x] Controls
+* [x] **Controls**
   * [x] Algorithm Selection
   * [x] Speed control
-* [x] Algorithms
-  * [x] Depth-First-Search
-  * [x] Breadth-First-Search
-  * [x] Dijkstra's Algorithm
-  * [x] A* Algorithm
-  * [x] Bellman-Ford Algorithm
-  * [x] Floyd-Warshall Algorithm
-  * [x] Prim's Algorithm
-  * [x] Kruskal's Algorithm
-* [x] Core
-  * [x] Classes
+* [x] **Algorithms**
+  * [x] _Path finding_
+    * [x] Depth-First-Search
+    * [x] Shortest Path
+      * [x] Breadth-First-Search
+      * [x] Dijkstra's Algorithm
+      * [x] A* Algorithm
+      * [x] Bellman-Ford Algorithm
+      * [x] Floyd-Warshall Algorithm
+  * [x] _Minimum Spanning Tree (MST)_
+    * [x] Prim's Algorithm
+    * [x] Kruskal's Algorithm
+  * [ ] _Lowest Common Ancestor (LCA)_
+    * [ ] Binary Lifting
+    * [ ] Euler Tour
+* [x] **Core**
+  * [x] _Classes_
     * [x] Graph
     * [x] Node
     * [x] Edge
     * [x] Canvas
     * [x] PriorityQueue
-  * [x] Interfaces
+  * [x] _Interfaces_
     * [x] Pair
 
 ---
